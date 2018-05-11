@@ -1,6 +1,6 @@
 <?php
 
-namespace Postmark;
+namespace Radweb\Postmark;
 
 use GuzzleHttp\Client;
 use Swift_Events_EventListener;

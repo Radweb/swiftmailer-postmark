@@ -10,8 +10,8 @@
     },
     "license": "MIT",
     "autoload": {
-        "psr-0": {
-            "Postmark\\": "src/"
+        "psr-4": {
+            "Radweb\\": "src/"
         }
     },
     "autoload-dev": {
