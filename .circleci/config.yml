@@ -33,7 +33,7 @@ jobs:
     <<: *BUILD_STEPS
     working_directory: /home/circleci/workspace
     docker:
-      -image: laratools/ci:7.2
+      - image: laratools/ci:7.2
 
 workflows:
   version: 2
