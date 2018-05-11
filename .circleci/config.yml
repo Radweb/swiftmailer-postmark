@@ -4,7 +4,7 @@ version: 2
   steps:
     - checkout
     - restore_cache:
-        keys: composer-dependencies-{{ checksum "composer.json" }}
+        key: composer-dependencies-{{ checksum "composer.json" }}
     - run:
         name: Install Composer Dependencies
         command: composer install --no-progress --no-suggest
