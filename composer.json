@@ -27,6 +27,10 @@
         {
             "name": "Postmark",
             "email": "support@postmarkapp.com"
+        },
+        {
+            "name": "Wade Urry",
+            "email": "wade@radweb.co.uk"
         }
     ]
 }
