@@ -73,7 +73,6 @@ class Transport implements Swift_Transport {
 				'User-Agent' => "swiftmailer-postmark (PHP Version: $v, OS: $o)",
 			],
 			'json' => $this->getMessagePayload($message),
-			'http_errors' => false,
 		]);
 
 		return $response->getStatusCode() >= 200 && $response->getStatusCode() < 300 ? $this->getRecipientCount($message) : 0;
