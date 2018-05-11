@@ -1,8 +1,4 @@
 {
-    "repositories": [{
-        "type": "composer",
-        "url": "https://packagist.org"
-    }],
     "name": "wildbit/swiftmailer-postmark",
     "description": "A Swiftmailer Transport for Postmark.",
     "require": {
@@ -30,8 +26,10 @@
     "suggest": {
         "wildbit/laravel-postmark-provider": "~1.0"
     },
-    "authors": [{
-        "name": "Postmark",
-        "email": "support@postmarkapp.com"
-    }]
+    "authors": [
+        {
+            "name": "Postmark",
+            "email": "support@postmarkapp.com"
+        }
+    ]
 }
