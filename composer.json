@@ -1,5 +1,5 @@
 {
-    "name": "wildbit/swiftmailer-postmark",
+    "name": "radweb/swiftmailer-postmark",
     "description": "A Swiftmailer Transport for Postmark.",
     "require": {
         "swiftmailer/swiftmailer": ">=4.1.5",
