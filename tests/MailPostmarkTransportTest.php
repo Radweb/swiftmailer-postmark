@@ -3,11 +3,11 @@
 namespace Tests;
 
 use GuzzleHttp\Psr7\Response;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Swift_Attachment;
 use Swift_Message;
 
-class MailPostmarkTransportTest extends PHPUnit_Framework_TestCase
+class MailPostmarkTransportTest extends TestCase
 {
     /** @test */
 	public function it_can_send()
