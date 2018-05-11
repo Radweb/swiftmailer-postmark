@@ -2,9 +2,15 @@
 
 namespace Tests;
 
-class MailPostmarkTransportTest extends PHPUnit_Framework_TestCase {
+use PHPUnit_Framework_TestCase;
+use Swift_Attachment;
+use Swift_Message;
 
-	public function testSend() {
+class MailPostmarkTransportTest extends PHPUnit_Framework_TestCase
+{
+    /** @test */
+	public function send()
+    {
 		$message = new Swift_Message();
 		$message->setFrom('johnny5@example.com', 'Johnny #5');
 		$message->setSubject('Is alive!');
@@ -80,17 +86,5 @@ class MailPostmarkTransportTest extends PHPUnit_Framework_TestCase {
 		       );
 
 		$transport->send($message);
-	}
-}
-
-class PostmarkTransportStub extends Postmark\Transport {
-	protected $client;
-
-	protected function getHttpClient() {
-		return $this->client;
-	}
-
-	public function setHttpClient($client) {
-		$this->client = $client;
 	}
 }
