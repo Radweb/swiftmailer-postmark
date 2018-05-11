@@ -15,10 +15,9 @@
         }
     },
     "autoload-dev": {
-        "classmap": [
-            "src/",
-            "tests/"
-        ]
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
     },
     "scripts" : {
       "test" : "phpunit"  
