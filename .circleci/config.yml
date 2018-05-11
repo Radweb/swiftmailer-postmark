@@ -17,12 +17,6 @@ version: 2
         command: composer test
 
 jobs:
-  php70:
-    <<: *BUILD_STEPS
-    working_directory: /home/circleci/workspace
-    docker:
-      - image: laratools/ci:7.0
-
   php71:
     <<: *BUILD_STEPS
     working_directory: /home/circleci/workspace
@@ -40,6 +34,5 @@ workflows:
 
   test:
     jobs:
-      - php70
       - php71
       - php72
