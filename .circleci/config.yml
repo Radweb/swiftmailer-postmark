@@ -1,0 +1,45 @@
+version: 2
+
+<<: &BUILD_STEPS
+  steps:
+    - checkout
+    - restore_cache:
+        keys: composer-dependencies-{{ checksum "composer.json" }}
+    - run:
+        name: Install Composer Dependencies
+        command: composer install --no-progress --no-suggest
+    - save_cache:
+        key: composer-dependencies-{{ checksum "composer.json" }}
+        paths:
+          - vendor
+    - run:
+        name: PHPUnit
+        command: composer test
+
+jobs:
+  php70:
+    <<: *BUILD_STEPS
+    working_directory: /home/circleci/workspace
+    docker:
+      - image: laratools/ci:7.0
+
+  php71:
+    <<: *BUILD_STEPS
+    working_directory: /home/circleci/workspace
+    docker:
+      - image: laratools/ci:7.1
+
+  php72:
+    <<: *BUILD_STEPS
+    working_directory: /home/circleci/workspace
+    docker:
+      -image: laratools/ci:7.2
+
+workflows:
+  version: 2
+
+  test:
+    jobs:
+      - php70
+      - php71
+      - php72
