@@ -4,7 +4,8 @@ namespace Radweb\Postmark;
 
 use GuzzleHttp\Client;
 use Swift_Events_EventListener;
-use Swift_Mime_Message;
+use Swift_Mime_MimePart;
+use Swift_Mime_SimpleMessage;
 use Swift_Transport;
 
 class Transport implements Swift_Transport {
@@ -52,16 +53,20 @@ class Transport implements Swift_Transport {
 		return true;
 	}
 
-	/**
+	public function ping() {
+        return true;
+    }
+
+    /**
 	 * {@inheritdoc}
 	 */
-	public function send(Swift_Mime_Message $message, &$failedRecipients = null) {
+	public function send(Swift_Mime_SimpleMessage $message, &$failedRecipients = null) {
 		$client = $this->getHttpClient();
 
 		$v = $this->version;
 		$o = $this->os;
 
-		return $client->request('POST','https://api.postmarkapp.com/email', [
+		$response = $client->request('POST','https://api.postmarkapp.com/email', [
 			'headers' => [
 				'X-Postmark-Server-Token' => $this->serverToken,
 				'Content-Type' => 'application/json',
@@ -70,7 +75,25 @@ class Transport implements Swift_Transport {
 			'json' => $this->getMessagePayload($message),
 			'http_errors' => false,
 		]);
+
+		return $response->getStatusCode() >= 200 && $response < 300 ? $this->getRecipientCount($message) : 0;
 	}
+
+	/**
+	 * Get the number of recipients for a message
+	 *
+	 * @param Swift_Mime_SimpleMessage $message
+	 * @return int
+	 */
+    private function getRecipientCount(Swift_Mime_SimpleMessage $message) {
+        $merged = array_merge(
+            (array) $message->getTo(),
+            (array) $message->getCc(),
+            (array) $message->getBcc()
+        );
+
+        return count($merged);
+    }
 
 	/**
 	 * Convert email dictionary with emails and names
@@ -94,11 +117,11 @@ class Transport implements Swift_Transport {
 	 * Excludes parts of type \Swift_Mime_Attachment as those
 	 * are handled later.
 	 *
-	 * @param  Swift_Mime_Message  $message
+	 * @param  Swift_Mime_SimpleMessage  $message
 	 * @param  string              $mimeType
 	 * @return Swift_Mime_MimePart
 	 */
-	private function getMIMEPart(\Swift_Mime_Message $message, $mimeType) {
+	private function getMIMEPart(Swift_Mime_SimpleMessage $message, $mimeType) {
 		foreach ($message->getChildren() as $part) {
 			if (strpos($part->getContentType(), $mimeType) === 0 && !($part instanceof \Swift_Mime_Attachment)) {
 				return $part;
@@ -109,10 +132,10 @@ class Transport implements Swift_Transport {
 	/**
 	 * Convert a Swift Mime Message to a Postmark Payload.
 	 *
-	 * @param  Swift_Mime_Message  $message
+	 * @param  Swift_Mime_SimpleMessage  $message
 	 * @return object
 	 */
-	private function getMessagePayload(Swift_Mime_Message $message) {
+	private function getMessagePayload(Swift_Mime_SimpleMessage $message) {
 		$payload = [];
 
 		$this->processRecipients($payload, $message);
@@ -130,10 +153,10 @@ class Transport implements Swift_Transport {
 	 * Applies the recipients of the message into the API Payload.
 	 *
 	 * @param  array               $payload
-	 * @param  Swift_Mime_Message  $message
+	 * @param  Swift_Mime_SimpleMessage  $message
 	 * @return object
 	 */
-	private function processRecipients(&$payload, $message) {
+	private function processRecipients(&$payload, Swift_Mime_SimpleMessage $message) {
 		$payload['From'] = join(',', $this->convertEmailsArray($message->getFrom()));
 		$payload['To'] = join(',', $this->convertEmailsArray($message->getTo()));
 		$payload['Subject'] = $message->getSubject();
@@ -154,10 +177,10 @@ class Transport implements Swift_Transport {
 	 * into the API Payload.
 	 *
 	 * @param  array               $payload
-	 * @param  Swift_Mime_Message  $message
+	 * @param  Swift_Mime_SimpleMessage  $message
 	 * @return object
 	 */
-	private function processMessageParts(&$payload, $message) {
+	private function processMessageParts(&$payload, Swift_Mime_SimpleMessage $message) {
 		//Get the primary message.
 		switch ($message->getContentType()) {
 			case 'text/html':
@@ -199,10 +222,10 @@ class Transport implements Swift_Transport {
 	 * Applies the headers into the API Payload.
 	 *
 	 * @param  array               $payload
-	 * @param  Swift_Mime_Message  $message
+	 * @param  Swift_Mime_SimpleMessage  $message
 	 * @return object
 	 */
-	private function processHeaders(&$payload, $message) {
+	private function processHeaders(&$payload, Swift_Mime_SimpleMessage $message) {
 		$headers = [];
 
 		foreach ($message->getHeaders()->getAll() as $key => $value) {
