@@ -3,7 +3,7 @@
     "description": "A Swiftmailer Transport for Postmark.",
     "require": {
         "swiftmailer/swiftmailer": "^6.0",
-        "guzzlehttp/guzzle": "~6.0",
+        "guzzlehttp/guzzle": "^6.0",
         "php": "^7.0"
     },
     "require-dev": {
