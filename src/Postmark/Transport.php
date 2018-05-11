@@ -76,7 +76,7 @@ class Transport implements Swift_Transport {
 			'http_errors' => false,
 		]);
 
-		return $response->getStatusCode() >= 200 && $response < 300 ? $this->getRecipientCount($message) : 0;
+		return $response->getStatusCode() >= 200 && $response->getStatusCode() < 300 ? $this->getRecipientCount($message) : 0;
 	}
 
 	/**
