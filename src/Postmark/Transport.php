@@ -75,7 +75,9 @@ class Transport implements Swift_Transport {
 			'json' => $this->getMessagePayload($message),
 		]);
 
-		return $response->getStatusCode() >= 200 && $response->getStatusCode() < 300 ? $this->getRecipientCount($message) : 0;
+		$status = $response->getStatusCode();
+
+		return $status >= 200 && $status < 300 ? $this->getRecipientCount($message) : 0;
 	}
 
 	/**
